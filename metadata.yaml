@@ -16,6 +16,8 @@ homepage: "https://www.cookietractor.com"
 documentation: "https://www.cookietractor.com/setup-instructions/google-tag-manager"
 versions:
   # Latest version
+  - sha: 55c6898daa96087d2e38f616c50fae3d2142c0a7
+    changeNotes: Updates to support regions for default consents
+  # Older versions
   - sha: 87522c3b9cee98426a481a7b9d5b531c47e0db99
     changeNotes: Initial release.
-  # Older versions
