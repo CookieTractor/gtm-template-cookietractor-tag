@@ -14,7 +14,6 @@ ___INFO___
   "version": 1,
   "securityGroups": [],
   "displayName": "CookieTractor CMP (Consent Mode v2)",
-  "categories": ["TAG_MANAGEMENT", "PERSONALIZATION", "ANALYTICS"],
   "brand": {
     "id": "brand_dummy",
     "displayName": "",
@@ -46,7 +45,7 @@ ___TEMPLATE_PARAMETERS___
   {
     "type": "SELECT",
     "name": "domain",
-    "displayName": "Data limited to within EU",
+    "displayName": "Content Delivery Network (CDN)",
     "macrosInSelect": false,
     "selectItems": [
       {
@@ -55,7 +54,7 @@ ___TEMPLATE_PARAMETERS___
       },
       {
         "value": "cdn-eu.cookietractor.com",
-        "displayValue": "Within EU (requires add-on)"
+        "displayValue": "EU only (requires add-on)"
       }
     ],
     "simpleValueType": true,
@@ -81,8 +80,15 @@ ___TEMPLATE_PARAMETERS___
     "valueHint": "en-US"
   },
   {
+    "type": "CHECKBOX",
+    "name": "enableGcm",
+    "checkboxText": "Enable Google Consent Mode",
+    "simpleValueType": true,
+    "defaultValue": true
+  },
+  {
     "type": "GROUP",
-    "name": "group1",
+    "name": "group_cgm",
     "displayName": "Tracking Without Marketing Storage",
     "groupStyle": "NO_ZIPPY",
     "subParams": [
@@ -123,7 +129,178 @@ ___TEMPLATE_PARAMETERS___
         "defaultValue": false
       }
     ],
-    "help": "Settings to apply when marketing storage is denied."
+    "help": "Settings to apply when marketing storage is denied.",
+    "enablingConditions": [
+      {
+        "paramName": "enableGcm",
+        "paramValue": true,
+        "type": "EQUALS"
+      }
+    ]
+  },
+  {
+    "type": "GROUP",
+    "name": "group_region",
+    "displayName": "Default Consent State",
+    "groupStyle": "NO_ZIPPY",
+    "subParams": [
+      {
+        "type": "PARAM_TABLE",
+        "name": "regions",
+        "displayName": "",
+        "paramTableColumns": [
+          {
+            "param": {
+              "type": "TEXT",
+              "name": "region",
+              "displayName": "Region",
+              "simpleValueType": true,
+              "help": "List of comma separated regions for which to apply the defaults. Leave blank to apply globally. ISO-3166-1 alpha-2 country codes for region values. E.g. US,SE,DK",
+              "valueHint": ""
+            },
+            "isUnique": false
+          },
+          {
+            "param": {
+              "type": "SELECT",
+              "name": "functionality_storage",
+              "displayName": "Functionality Storage",
+              "macrosInSelect": false,
+              "selectItems": [
+                {
+                  "value": "denied",
+                  "displayValue": "Denied"
+                },
+                {
+                  "value": "granted",
+                  "displayValue": "Granted"
+                }
+              ],
+              "simpleValueType": true,
+              "help": "Default consent state for functionality_store"
+            },
+            "isUnique": false
+          },
+          {
+            "param": {
+              "type": "SELECT",
+              "name": "personalization_storage",
+              "displayName": "Personalization Storage",
+              "macrosInSelect": false,
+              "selectItems": [
+                {
+                  "value": "denied",
+                  "displayValue": "Denied"
+                },
+                {
+                  "value": "granted",
+                  "displayValue": "Granted"
+                }
+              ],
+              "simpleValueType": true,
+              "help": "Default consent state for personalization_storage"
+            },
+            "isUnique": false
+          },
+          {
+            "param": {
+              "type": "SELECT",
+              "name": "analytics_storage",
+              "displayName": "Analytics Storage",
+              "macrosInSelect": false,
+              "selectItems": [
+                {
+                  "value": "denied",
+                  "displayValue": "Denied"
+                },
+                {
+                  "value": "granted",
+                  "displayValue": "Granted"
+                }
+              ],
+              "simpleValueType": true,
+              "help": "Default consent state for analytics_storage"
+            },
+            "isUnique": false
+          },
+          {
+            "param": {
+              "type": "SELECT",
+              "name": "ad_storage",
+              "displayName": "Ad Storage",
+              "macrosInSelect": false,
+              "selectItems": [
+                {
+                  "value": "denied",
+                  "displayValue": "Denied"
+                },
+                {
+                  "value": "granted",
+                  "displayValue": "Granted"
+                }
+              ],
+              "simpleValueType": true,
+              "help": "Default consent state for ad_storage"
+            },
+            "isUnique": false
+          },
+          {
+            "param": {
+              "type": "SELECT",
+              "name": "ad_user_data",
+              "displayName": "Ad User Data",
+              "macrosInSelect": false,
+              "selectItems": [
+                {
+                  "value": "denied",
+                  "displayValue": "Denied"
+                },
+                {
+                  "value": "granted",
+                  "displayValue": "Granted"
+                }
+              ],
+              "simpleValueType": true,
+              "help": "Default consent state for ad_user_data"
+            },
+            "isUnique": false
+          },
+          {
+            "param": {
+              "type": "SELECT",
+              "name": "ad_personalization",
+              "displayName": "Ad Personalization",
+              "macrosInSelect": false,
+              "selectItems": [
+                {
+                  "value": "denied",
+                  "displayValue": "Denied"
+                },
+                {
+                  "value": "granted",
+                  "displayValue": "Granted"
+                }
+              ],
+              "simpleValueType": true,
+              "help": "Default consent state for ad_personalization"
+            },
+            "isUnique": false
+          }
+        ],
+        "newRowTitle": "Add region",
+        "newRowButtonText": "Add region",
+        "editRowTitle": "Edit",
+        "help": ""
+      }
+    ],
+    "help": "Set default consent states",
+    "enablingConditions": [
+      {
+        "paramName": "enableGcm",
+        "paramValue": true,
+        "type": "EQUALS"
+      }
+    ]
   }
 ]
 
@@ -151,6 +328,9 @@ data.domain
 data.langIso
 data.adsDataRedaction ("true" / "false")
 data.urlPassthrough ("true" / "false")
+
+data.enableGcm
+data.regions
 */
 const CONSENT_TYPE = {
     undefined : 'undefined',
@@ -171,8 +351,10 @@ Get an array of consents
 function parseConsentCookie(cookieValue) {
     if(!cookieValue)
         return {consents : []};
-    let isLegacyEncoding = cookieValue.indexOf(',') > -1;
-    let decoded = isLegacyEncoding ? decodeUri(cookieValue) : decodeUriComponent(cookieValue);
+    
+    // Prepared to allow chaning encoding to cookie-friendly decodeUriComponent in the future
+    let isLegacyEncoding = cookieValue.indexOf(',') > -1;    
+    let decoded = isLegacyEncoding ? decodeUriComponent(cookieValue) : decodeUriComponent(cookieValue);
     let parsed = JSON.parse(decoded);
     return parsed;
 }
@@ -181,12 +363,11 @@ function getGrantedOrDenied(cookieData, consent) {
     return cookieData.consents.indexOf(consent) > -1 ? 'granted' : 'denied';
 }
 
+
 log(LOG_PREFIX,'Data:', data);
 
-gtagSet('ads_data_redaction', data.adsDataRedaction);
-gtagSet('url_passthrough', data.urlPassthrough);
-gtagSet('developer_id.dNjQ5N2', true);
 
+gtagSet('developer_id.dNjQ5N2', true);
 
 let existingCookieTractorSettings = copyFromWindow('cookieConsentSettings');
 let cookieConsentSettings = {};
@@ -204,6 +385,10 @@ cookieConsentSettings.langIso = data.langIso;
 cookieConsentSettings.cmAdsDataRedaction = data.adsDataRedaction;
 cookieConsentSettings.cmUrlPassthrough = data.urlPassthrough;
 cookieConsentSettings.cmInitialized = true;
+cookieConsentSettings.cmTagTemplateVersion = 2; // Used by script to adjust behavior if needed
+
+// New checkboxes are undefined by the default. We'll treat undefined as true.
+cookieConsentSettings.cmEnabled = typeof data.enableGcm == 'undefined' || data.enableGcm == true; 
 
 log(LOG_PREFIX + 'Setting cookieConsentSettings', JSON.stringify(cookieConsentSettings));
 
@@ -211,44 +396,125 @@ setInWindow('cookieConsentSettings', cookieConsentSettings, true);
 
 log(LOG_PREFIX + 'setting after', cookieConsentSettings);
 
-let initConsents = {
-    ad_storage: "denied",
-    analytics_storage: "denied",
-    functionality_storage: "denied",
-    personalization_storage: "denied",
-    ad_user_data: "denied",
-    ad_personalization: "denied",
-    security_storage: "granted",
-};
+if(cookieConsentSettings.cmEnabled) {
+
+  const getRegionConsent = (region) => {
+    
+    const getRegionArr = (regionStr) => {
+      return regionStr.split(',')
+        .map(iso => iso.trim())
+        .filter(iso => iso.length !== 0);
+    };
+    
+      const gcmRegionData = {
+        ad_storage: region.ad_storage,
+        ad_personalization: region.ad_personalization,
+        ad_user_data: region.ad_user_data,
+        analytics_storage: region.analytics_storage,
+        functionality_storage: region.functionality_storage,
+        personalization_storage: region.personalization_storage,
+        security_storage: 'granted',
+        wait_for_update : 1500
+      };
+
+      const regionArr = getRegionArr(region.region);
+
+      if (regionArr.length) {
+        gcmRegionData.region = regionArr;
+      }
+
+      return gcmRegionData;
+    };
+  
+    gtagSet('ads_data_redaction', data.adsDataRedaction);
+    gtagSet('url_passthrough', data.urlPassthrough);
+  
+    let defaultConsents = [];
+  
+    log(LOG_PREFIX + 'regions: ', data.regions);
+  
+    if(data.regions && data.regions.length > 0){
+      
+      data.regions.forEach((region)=>{
+        defaultConsents.push(getRegionConsent(region));
+      });
+      
+    }
+  
+   let hasGlobalDefault = defaultConsents.filter(x=> typeof(x.region) == 'undefined').length > 0;
+  
+   if(!hasGlobalDefault){
+     
+     defaultConsents.unshift({
+        ad_storage: "denied",
+        analytics_storage: "denied",
+        functionality_storage: "denied",
+        personalization_storage: "denied",
+        ad_user_data: "denied",
+        ad_personalization: "denied",
+        security_storage: "granted",
+        wait_for_update : 1500
+    });
+     
+   }
+    
+   log(LOG_PREFIX + 'default contents', defaultConsents);
+    
+    
+    defaultConsents.forEach((consents)=>{
+      initDefaultConsent(consents);
+    });
+    
+
+
+/* --- Update Default Consent */
 
 var consentCookies = getCookieValues('_cc_cookieConsent');
 
-if(consentCookies && consentCookies.length > 0){
-  log(LOG_PREFIX,'we got consent',consentCookies[0]);
+if(consentCookies && consentCookies.length > 0) {
+    log(LOG_PREFIX,'we got consent',consentCookies[0]);
 
-  let cookieData = parseConsentCookie(consentCookies[0]);
-
-  //MapConsents
-  if(cookieData.availableConsents && cookieData.availableConsents.indexOf(CONSENT_TYPE.functional) > -1) {
-        initConsents.functionality_storage = getGrantedOrDenied(cookieData,CONSENT_TYPE.functional);
+    let cookieData = parseConsentCookie(consentCookies[0]);
+  
+    let consentsFromCookie = {
+        ad_storage: "denied",
+        analytics_storage: "denied",
+        functionality_storage: "denied",
+        personalization_storage: "denied",
+        ad_user_data: "denied",
+        ad_personalization: "denied",
+        security_storage: "granted",
+    };
+    
+    if(cookieData.availableConsents && cookieData.availableConsents.indexOf(CONSENT_TYPE.functional) > -1) {
+        consentsFromCookie.functionality_storage = getGrantedOrDenied(cookieData,CONSENT_TYPE.functional);
     }
     else
     {
-        initConsents.functionality_storage = getGrantedOrDenied(cookieData,CONSENT_TYPE.necessary);
+        consentsFromCookie.functionality_storage = getGrantedOrDenied(cookieData,CONSENT_TYPE.necessary);
     }
 
-    initConsents.analytics_storage = getGrantedOrDenied(cookieData,CONSENT_TYPE.statistical);
+    consentsFromCookie.analytics_storage = getGrantedOrDenied(cookieData,CONSENT_TYPE.statistical);
 
-    initConsents.ad_storage = getGrantedOrDenied(cookieData,CONSENT_TYPE.marketing);
-    initConsents.personalization_storage = getGrantedOrDenied(cookieData,CONSENT_TYPE.marketing);
+    consentsFromCookie.ad_storage = getGrantedOrDenied(cookieData,CONSENT_TYPE.marketing);
+    consentsFromCookie.personalization_storage = getGrantedOrDenied(cookieData,CONSENT_TYPE.marketing);
 
-    initConsents.ad_user_data = getGrantedOrDenied(cookieData,CONSENT_TYPE.marketing);
-    initConsents.ad_personalization = getGrantedOrDenied(cookieData,CONSENT_TYPE.marketing);
+    consentsFromCookie.ad_user_data = getGrantedOrDenied(cookieData,CONSENT_TYPE.marketing);
+    consentsFromCookie.ad_personalization = getGrantedOrDenied(cookieData,CONSENT_TYPE.marketing);
     
     log(LOG_PREFIX,'parsed cookie',cookieData);
+  
+    updateConsentState(consentsFromCookie);
 }
 
-initDefaultConsent(initConsents);
+}
+
+if (existingCookieTractorSettings.gtmTemplateDebug) {
+  cdnHost = 'https://app-cookietractor-com-local.obviuse.se';
+}
+
+log(LOG_PREFIX + 'cdnhost: ', cdnHost);
+
 
 let scriptURL = '';
 if(cdnHost.substring(0,4) =='http') {
@@ -694,6 +960,6 @@ scenarios: []
 
 ___NOTES___
 
-Created on 3/1/2024, 1:48:09 PM
+Created on 4/10/2025, 4:23:39 PM
 
 
