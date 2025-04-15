@@ -509,7 +509,7 @@ if(consentCookies && consentCookies.length > 0) {
 
 }
 
-if (existingCookieTractorSettings.gtmTemplateDebug) {
+if (existingCookieTractorSettings && existingCookieTractorSettings.gtmTemplateDebug) {
   cdnHost = 'https://app-cookietractor-com-local.obviuse.se';
 }
 
@@ -960,6 +960,6 @@ scenarios: []
 
 ___NOTES___
 
-Created on 4/10/2025, 4:23:39 PM
+Created on 4/15/2025, 1:37:06 PM
 
 
